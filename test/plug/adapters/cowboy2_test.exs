@@ -58,6 +58,21 @@ defmodule Plug.Adapters.Cowboy2Test do
            args(:http, __MODULE__, [], [port: 3000, protocol_options: [timeout: 30_000]])
   end
 
+  test "builds args with compress option" do
+    assert [Plug.Adapters.Cowboy2Test.HTTP,
+            [max_connections: 16_384, port: 3000],
+            %{env: %{dispatch: @dispatch},
+              stream_handlers: [:cowboy_compress_h, :cowboy_stream_h]}] =
+      args(:http, __MODULE__, [], [port: 3000, compress: true])
+  end
+
+  test "builds args with compress option fails if stream_handlers are set" do
+    assert_raise(RuntimeError, ~r/set both compress and stream_handlers/, fn ->
+      args(:http, __MODULE__, [],
+        [port: 3000, compress: true,stream_handlers: [:cowboy_stream_h]])
+    end)
+  end
+
   test "builds args with single-atom protocol option" do
     assert [Plug.Adapters.Cowboy2Test.HTTP,
             [:inet6, max_connections: 16_384, port: 3000],
