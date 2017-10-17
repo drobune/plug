@@ -319,7 +319,7 @@ defmodule Plug.Static do
         file_info(size: size, mtime: mtime) = file_info
         tag = {size, mtime} |> :erlang.phash2() |> Integer.to_string(16)                                                                                                                                                                                                       
         # want weak etag for cloudflare....                                                                                                                                                                                                                                 
-        "w/\"" <> tag <> "\""          
+        "W/\"" <> tag <> "\""          
     end
   end
 
